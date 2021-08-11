@@ -13,7 +13,7 @@ class Shop {
     List<Bread> getBreads() {
         return breads;
     }
-    
+
     public void buySomething() {
 // Критическая секция
         synchronized (seller) {
