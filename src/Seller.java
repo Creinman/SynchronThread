@@ -18,7 +18,7 @@ class Seller extends ReentrantLock {
             Thread.sleep(3000);
             autoMarket.getAuto().add(new Auto());
             System.out.println("Продавец: Авто пришел в салон");
-            Condition.signal(); // Вместо notify();
+            Condition.signal();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -31,7 +31,7 @@ class Seller extends ReentrantLock {
             System.out.println("Продавец: отпускаю авто");
             while (autoMarket.getAuto().size() == 0) {
                 System.out.println("Продавец: Не могу продать - машины нет!");
-                Condition.await(); // Вместо wait();
+                Condition.await();
             }
             Thread.sleep(1000);
             System.out.println("Продавец: авто продан");
