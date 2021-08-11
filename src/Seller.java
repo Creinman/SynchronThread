@@ -1,32 +1,34 @@
 class Seller {
     private Shop shop;
+
     public Seller(Shop shop) {
         this.shop = shop;
     }
-    public synchronized void receiveBread() {
+
+    public synchronized void receiveAuto() {
         try {
-            System.out.println("Продавец: Принимаю товар");
+            System.out.println("производитель Тойота выпустил новый авто");
             Thread.sleep(3000);
-            shop.getBreads().add(new Bread());
-            System.out.println("Продавец: Прием товара завершен");
-            notify();
+            shop.getAuto().add(new Auto());
+            notifyAll();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
-    public synchronized Bread sellBread() {
+
+    public synchronized Auto sellAuto() {
         try {
-            System.out.println("Продавец: Продаю хлеб");
-            while (shop.getBreads().size() == 0) {
-                System.out.println("Продавец: Не могу продать - хлеба нет!");
+            System.out.println(Thread.currentThread().getName() + " зашёл в автосалон");
+            while (shop.getAuto().size() == 0) {
+                System.out.println("машин нет");
                 wait();
             }
             Thread.sleep(1000);
-            System.out.println("Продавец: Продано");
+            System.out.println(Thread.currentThread().getName() + " уехал на новеньком автомобиле");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return shop.getBreads().remove(0);
+        return shop.getAuto().remove(0);
     }
 
 }
