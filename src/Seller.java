@@ -1,45 +1,33 @@
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.*;
-import java.util.concurrent.locks.ReentrantLock;
-
-import static java.util.concurrent.locks.Condition.*;
-
-class Seller extends ReentrantLock {
-    private AutoMarket autoMarket;
-    Lock lock = new ReentrantLock();
-    public Seller(AutoMarket autoMarket) {
-        this.autoMarket = autoMarket;
+class Seller {
+    private Shop shop;
+    public Seller(Shop shop) {
+        this.shop = shop;
     }
-    public void receiveAuto() {
+    public synchronized void receiveBread() {
         try {
-            lock.lock();
-            System.out.println("Продавец: Тойота выпустила один авто");
+            System.out.println("Продавец: Принимаю товар");
             Thread.sleep(3000);
-            autoMarket.getAuto().add(new Auto());
-            System.out.println("Продавец: Авто пришел в салон");
-            Condition.signal();
+            shop.getBreads().add(new Bread());
+            System.out.println("Продавец: Прием товара завершен");
+            notify();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        } finally {
-            lock.unlock();
         }
     }
-    public Auto sellAuto() {
+    public synchronized Bread sellBread() {
         try {
-            lock.lock();
-            System.out.println("Продавец: отпускаю авто");
-            while (autoMarket.getAuto().size() == 0) {
-                System.out.println("Продавец: Не могу продать - машины нет!");
-                Condition.await();
+            System.out.println("Продавец: Продаю хлеб");
+            while (shop.getBreads().size() == 0) {
+                System.out.println("Продавец: Не могу продать - хлеба нет!");
+                wait();
             }
             Thread.sleep(1000);
-            System.out.println("Продавец: авто продан");
+            System.out.println("Продавец: Продано");
         } catch (InterruptedException e) {
             e.printStackTrace();
-        } finally {
-            lock.unlock();
         }
-        return autoMarket.getAuto().remove(0);
+        return shop.getBreads().remove(0);
     }
+
 }
+
