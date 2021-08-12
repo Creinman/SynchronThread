@@ -6,24 +6,18 @@ class Seller {
     }
 
     public synchronized void receiveAuto() {
-        try {
-            System.out.println("производитель Тойота выпустил новый авто");
-            Thread.sleep(3000);
-            shop.getAuto().add(new Auto());
-            notifyAll();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        System.out.println("производитель Тойота выпустил новый авто");
+        shop.getAuto().add(new Auto());
+        notifyAll();
     }
 
     public synchronized Auto sellAuto() {
         try {
             System.out.println(Thread.currentThread().getName() + " зашёл в автосалон");
             while (shop.getAuto().size() == 0) {
-                System.out.println("машин нет");
+                System.out.println(Thread.currentThread().getName() + " просит продать авто: машин нет");
                 wait();
             }
-            Thread.sleep(1000);
             System.out.println(Thread.currentThread().getName() + " уехал на новеньком автомобиле");
         } catch (InterruptedException e) {
             e.printStackTrace();
