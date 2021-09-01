@@ -1,3 +1,5 @@
+import java.util.concurrent.*;
+
 class Seller {
     private Shop shop;
 
@@ -6,9 +8,14 @@ class Seller {
     }
 
     public synchronized void receiveAuto() {
-        System.out.println("производитель Тойота выпустил новый авто");
-        shop.getAuto().add(new Auto());
-        notifyAll();
+        try {
+            System.out.println("производитель Тойота выпустил новый авто");
+            Thread.sleep(1000);
+            shop.getAuto().add(new Auto());
+            notifyAll();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public synchronized Auto sellAuto() {
@@ -19,6 +26,7 @@ class Seller {
                 System.out.println(Thread.currentThread().getName() + " просит продать авто: машин нет");
                 wait();
             }
+            Thread.sleep(1000);
             System.out.println(Thread.currentThread().getName() + " уехал на новеньком автомобиле");
         } catch (InterruptedException e) {
             e.printStackTrace();
