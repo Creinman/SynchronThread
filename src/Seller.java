@@ -14,7 +14,8 @@ class Seller {
     public synchronized Auto sellAuto() {
         try {
             System.out.println(Thread.currentThread().getName() + " зашёл в автосалон");
-            while (shop.getAuto().size() == 0) {
+            //while (shop.getAuto().size() == 0) {
+            while (shop.getAuto().isEmpty()) {
                 System.out.println(Thread.currentThread().getName() + " просит продать авто: машин нет");
                 wait();
             }
