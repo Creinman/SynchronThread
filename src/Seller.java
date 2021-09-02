@@ -1,9 +1,10 @@
 import java.util.concurrent.*;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 class Seller {
     private Shop shop;
-    public ReentrantLock lock = new ReentrantLock();
+    public Lock lock = new ReentrantLock();
 
     public Seller(Shop shop) {
         this.shop = shop;
@@ -25,7 +26,7 @@ class Seller {
 
     public synchronized Auto sellAuto() {
         try {
-            lock.lock();
+            //lock.lock();
             System.out.println(Thread.currentThread().getName() + " зашёл в автосалон");
             //while (shop.getAuto().size() == 0) {
             while (shop.getAuto().isEmpty()) {
@@ -37,7 +38,7 @@ class Seller {
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
-            lock.unlock();
+            //lock.unlock();
         }
         return shop.getAuto().remove(0);
     }
