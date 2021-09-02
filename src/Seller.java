@@ -4,7 +4,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 class Seller {
     private Shop shop;
-    public Lock lock = new ReentrantLock();
+    public ReentrantLock lock = new ReentrantLock();
 
     public Seller(Shop shop) {
         this.shop = shop;
@@ -16,7 +16,7 @@ class Seller {
             System.out.println("производитель Тойота выпустил новый авто");
             Thread.sleep(1000);
             shop.getAuto().add(new Auto());
-            notifyAll();
+            notify();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -28,7 +28,6 @@ class Seller {
         try {
             //lock.lock();
             System.out.println(Thread.currentThread().getName() + " зашёл в автосалон");
-            //while (shop.getAuto().size() == 0) {
             while (shop.getAuto().isEmpty()) {
                 System.out.println(Thread.currentThread().getName() + " просит продать авто: машин нет");
                 wait();
@@ -38,7 +37,7 @@ class Seller {
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
-            //lock.unlock();
+           // lock.unlock();
         }
         return shop.getAuto().remove(0);
     }
