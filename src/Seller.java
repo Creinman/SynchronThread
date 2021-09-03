@@ -5,20 +5,21 @@ import java.util.concurrent.locks.ReentrantLock;
 
 class Seller {
     private Shop shop;
-    public ReentrantLock lock = new ReentrantLock();
-    public Condition condition = lock.newCondition();
+   public ReentrantLock lock = new ReentrantLock();
+    Condition condition = lock.newCondition();
 
     public Seller(Shop shop) {
         this.shop = shop;
     }
 
-    public synchronized void receiveAuto() {
+    public /*synchronized*/ void receiveAuto() {
         try {
             lock.lock();
             System.out.println("производитель Тойота выпустил новый авто");
             Thread.sleep(1000);
             shop.getAuto().add(new Auto());
-            condition.signalAll();
+           // notifyAll();
+            condition.signal();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -26,12 +27,13 @@ class Seller {
         }
     }
 
-    public synchronized Auto sellAuto() {
+    public /*synchronized*/ Auto sellAuto() {
         try {
-            // lock.lock();
+            lock.lock();
             System.out.println(Thread.currentThread().getName() + " зашёл в автосалон");
             while (shop.getAuto().isEmpty()) {
                 System.out.println(Thread.currentThread().getName() + " просит продать авто: машин нет");
+                //wait();
                 condition.await();
             }
             Thread.sleep(1000);
@@ -39,10 +41,9 @@ class Seller {
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
-            //lock.unlock();
+            lock.unlock();
         }
         return shop.getAuto().remove(0);
     }
-
 }
 
