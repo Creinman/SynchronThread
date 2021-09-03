@@ -7,6 +7,7 @@ class Seller {
     private Shop shop;
     public ReentrantLock lock = new ReentrantLock();
     public Condition condition = lock.newCondition();
+
     public Seller(Shop shop) {
         this.shop = shop;
     }
@@ -17,7 +18,7 @@ class Seller {
             System.out.println("производитель Тойота выпустил новый авто");
             Thread.sleep(1000);
             shop.getAuto().add(new Auto());
-            condition.signal();
+            condition.signalAll();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -27,7 +28,7 @@ class Seller {
 
     public synchronized Auto sellAuto() {
         try {
-            lock.lock();
+            // lock.lock();
             System.out.println(Thread.currentThread().getName() + " зашёл в автосалон");
             while (shop.getAuto().isEmpty()) {
                 System.out.println(Thread.currentThread().getName() + " просит продать авто: машин нет");
@@ -38,7 +39,7 @@ class Seller {
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
-            lock.unlock();
+            //lock.unlock();
         }
         return shop.getAuto().remove(0);
     }
